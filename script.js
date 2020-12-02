@@ -30,7 +30,8 @@ window.onload = ()=> {
         debug: 3
     });
 
-    peer.on('open', function () {
+    peer.on('open', function (a) {
+        console.log(a);
         // SkyWay Serverに自分のapi keyで繋いでいるユーザ一覧を取得
         let peers = peer.listAllPeers(peers => {
             //JavaScript側で入れたやつとRuby側で入れたやつが出てくればよい
@@ -41,5 +42,17 @@ window.onload = ()=> {
     peer.on('error', function (err) {
         alert(err.message);
     });
+
+    document.getElementById("call_button").onclick = function() {
+        const target_id = document.getElementById("target_id_box").value;
+        const call = peer.call(target_id, null, {
+            videoReceiveEnabled: true
+        });
+
+        call.on('stream', (stream) => {
+            document.getElementById("remote_video").srcObject = stream;
+        });
+    };
 };
+
 
